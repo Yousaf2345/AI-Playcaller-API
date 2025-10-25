@@ -13,6 +13,8 @@ class PlayInput(BaseModel):
     ydstogo: int
     yrdline100: int
     qtr: int
+    ScoreDiff: float
+
 
 # Initialize FastAPI
 app = FastAPI()
@@ -46,7 +48,8 @@ def predict_play(data: PlayInput):
         "red_zone",
         "short_yard",
         "third_long",
-        "half"
+        "half",
+        "ScoreDiff"
         ]
         df = df[features]
         # Make prediction

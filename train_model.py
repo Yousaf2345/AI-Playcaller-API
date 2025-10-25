@@ -30,7 +30,8 @@ features = [
     "red_zone",
     "short_yard",
     "third_long",
-    "half"
+    "half",
+    "ScoreDiff"
 ]
     # Add more features as needed from your list
 
