@@ -33,6 +33,9 @@ ENV/
 *.tsv
 *.json
 
+# Allow model pkl files (tracked via Git LFS)
+!models/*.pkl
+
 # Trained models / serialized data
 *.pkl
 *.joblib
