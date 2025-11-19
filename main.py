@@ -3,18 +3,28 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import pandas as pd
 import joblib
-
+import os
+import joblib
 # ---------------------------
 # Load Offensive Model
 # ---------------------------
-model = joblib.load("playcall_model.pkl")
 
-# ---------------------------
-# Load Defensive Models
-# ---------------------------
-def_pressure_model = joblib.load("models/def_pressure_model.pkl")
-def_coverage_model = joblib.load("models/def_coverage_model.pkl")
-def_front_model = joblib.load("models/def_front_model.pkl")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load offensive model
+OFFENSE_MODEL_PATH = os.path.join(BASE_DIR, "models", "playcall_model.pkl")
+offense_model = joblib.load(OFFENSE_MODEL_PATH)
+
+# Load defensive models
+DEF_COVERAGE_PATH = os.path.join(BASE_DIR, "models", "def_coverage_model.pkl")
+DEF_FRONT_PATH = os.path.join(BASE_DIR, "models", "def_front_model.pkl")
+DEF_PRESSURE_PATH = os.path.join(BASE_DIR, "models", "def_pressure_model.pkl")
+
+def_coverage_model = joblib.load(DEF_COVERAGE_PATH)
+def_front_model = joblib.load(DEF_FRONT_PATH)
+def_pressure_model = joblib.load(DEF_PRESSURE_PATH)
+
 
 
 # ---------------------------
