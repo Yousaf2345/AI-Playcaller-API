@@ -33,13 +33,16 @@ ENV/
 *.tsv
 *.json
 
-# Allow model pkl files (tracked via Git LFS)
+# Do NOT ignore model files in /models
+!models/
 !models/*.pkl
+!models/*.joblib
 
-# Trained models / serialized data
+# Ignore model files everywhere else
 *.pkl
 *.joblib
 *.h5
+
 
 # ==========================
 # OS / EDITOR FILES
