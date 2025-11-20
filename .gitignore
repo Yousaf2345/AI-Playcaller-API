@@ -17,7 +17,7 @@ ENV/
 *.tmp
 *.swp
 
-# Data files (do NOT add large data files to git)
+# Data files (ignored)
 data/
 data/**
 *.csv
@@ -26,22 +26,20 @@ data/**
 *.json
 *.parquet
 
-# Git LFS for model files in /models
-# keep models directory in repo but track .pkl via LFS
-!models/
-# Allow LFS-managed model files to be added
-!models/*.pkl
-!models/*.joblib
-
-# But ignore any other pickles anywhere else
+# Ignore ALL pickle & model files everywhere
 *.pkl
 *.joblib
 *.h5
 
+# BUT allow model files inside /models
+!models/
+!models/*.pkl
+!models/*.joblib
+
 # Env / secrets
 .env
 .env.*
-
+ 
 # Build / dist
 build/
 dist/
