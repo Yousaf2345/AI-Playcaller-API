@@ -1,77 +1,48 @@
-# ==========================
-# PYTHON / FASTAPI PROJECTS
-# ==========================
-
-# Byte-compiled / optimized / DLL files
+# Python / environment / editors
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Virtual environment
 .venv/
-env/
 venv/
+env/
 ENV/
-
-# Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+.vscode/
+*.code-workspace
 
-# Logs and cache
+# Logs / caches
 *.log
 *.cache
 *.bak
 *.tmp
 *.swp
 
-# ==========================
-# MACHINE LEARNING FILES
-# ==========================
-
-# Data files
+# Data files (do NOT add large data files to git)
+data/
+data/**
 *.csv
 *.zip
 *.tsv
 *.json
+*.parquet
 
-# Do NOT ignore model files in /models
+# Git LFS for model files in /models
+# keep models directory in repo but track .pkl via LFS
 !models/
+# Allow LFS-managed model files to be added
 !models/*.pkl
 !models/*.joblib
 
-# Ignore model files everywhere else
+# But ignore any other pickles anywhere else
 *.pkl
 *.joblib
 *.h5
 
-
-# ==========================
-# OS / EDITOR FILES
-# ==========================
-
-# macOS
-.DS_Store
-
-# Windows
-Thumbs.db
-desktop.ini
-
-# VS Code
-.vscode/
-*.code-workspace
-
-# ==========================
-# ENVIRONMENT / CREDENTIALS
-# ==========================
-
-# Environment variables
+# Env / secrets
 .env
 .env.*
 
-# ==========================
-# BUILD & DEPLOYMENT
-# ==========================
-
-# Build / dist files
+# Build / dist
 build/
 dist/
 *.egg-info/
