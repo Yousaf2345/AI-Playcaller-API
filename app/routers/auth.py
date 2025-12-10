@@ -16,12 +16,9 @@ router = APIRouter()
 
 @router.post("/signup", response_model=UserOut)
 def signup(user_in: UserCreate, db: Session = Depends(get_db)):
-    # check username/email uniqueness
-    if db.query(db_models.User).filter(db_models.User.username == user_in.username).first():
+    existing = db.query(db_models.User).filter(db_models.User.username == user_in.username).first()
+    if existing:
         raise HTTPException(status_code=400, detail="Username already exists")
-    if db.query(db_models.User).filter(db_models.User.email == user_in.email).first():
-        raise HTTPException(status_code=400, detail="Email already exists")
-
     hashed = get_password_hash(user_in.password)
     user = db_models.User(
         username=user_in.username,
@@ -36,10 +33,9 @@ def signup(user_in: UserCreate, db: Session = Depends(get_db)):
     return user
 
 @router.post("/login", response_model=Token)
-def login(form: UserCreate, db: Session = Depends(get_db)):
-    # login accepts username & password from same schema for simplicity
-    user = db.query(db_models.User).filter(db_models.User.username == form.username).first()
-    if not user or not verify_password(form.password, user.hashed_password):
+def login(user_in: UserCreate, db: Session = Depends(get_db)):
+    user = db.query(db_models.User).filter(db_models.User.username == user_in.username).first()
+    if not user or not verify_password(user_in.password, user.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     token = create_access_token({"sub": user.username, "id": user.id})
     return {"access_token": token, "token_type": "bearer"}

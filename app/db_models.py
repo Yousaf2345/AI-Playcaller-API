@@ -7,7 +7,7 @@ from datetime import datetime
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True, nullable=False)   # username was missing previously
+    username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     full_name = Column(String, nullable=True)
     hashed_password = Column(String, nullable=False)
@@ -17,7 +17,6 @@ class User(Base):
 
     team_memberships = relationship("TeamMember", back_populates="user")
 
-
 class Team(Base):
     __tablename__ = "teams"
     id = Column(Integer, primary_key=True, index=True)
@@ -26,7 +25,6 @@ class Team(Base):
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
     members = relationship("TeamMember", back_populates="team")
-
 
 class TeamMember(Base):
     __tablename__ = "team_members"
@@ -38,4 +36,5 @@ class TeamMember(Base):
 
     user = relationship("User", back_populates="team_memberships")
     team = relationship("Team", back_populates="members")
+
 
