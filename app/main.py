@@ -36,16 +36,12 @@ app = FastAPI(title="AI Playcaller API (v2)")
 # CORS - allow Lovable preview + localhost + any dev origins (tighten in production)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "*",  # during dev. Replace with your exact Lovable origin(s) for production
-        # "https://id-preview--<your-preview>.lovable.app",
-        # "https://lovable.app",
-        # "http://localhost:5173",
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,  # Changed to False
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # create DB tables (sqlite file created automatically)
 Base.metadata.create_all(bind=engine)
