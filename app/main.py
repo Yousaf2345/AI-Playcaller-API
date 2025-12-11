@@ -42,6 +42,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.responses import Response
+
+@app.options("/{rest_of_path:path}")
+async def preflight_handler(rest_of_path: str):
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Authorization, Content-Type, x-client-info, apikey",
+        }
+    )
+
 
 # create DB tables (sqlite file created automatically)
 Base.metadata.create_all(bind=engine)
