@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import joblib
 
 from .database import Base, engine
-from .routers import predictions, auth  # remove teams import if you don't have it
+from .routers import predictions, auth
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -14,6 +14,7 @@ OFFENSE_MODEL_PATH = os.path.join(BASE_DIR, "..", "models", "playcall_model.pkl"
 DEF_COVERAGE_PATH = os.path.join(BASE_DIR, "..", "models", "def_coverage_model.pkl")
 DEF_FRONT_PATH = os.path.join(BASE_DIR, "..", "models", "def_front_model.pkl")
 DEF_PRESSURE_PATH = os.path.join(BASE_DIR, "..", "models", "def_pressure_model.pkl")
+
 
 def load_models():
     models = {}
@@ -31,43 +32,37 @@ def load_models():
             print(f"Warning: failed loading {path}: {e}")
     return models
 
+
 app = FastAPI(title="AI Playcaller API (v2)")
 
-# CORS - allow Lovable preview + localhost + any dev origins (tighten in production)
+# ✅ CORS MUST COME BEFORE ROUTERS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,  # Changed to False
+    allow_origins=[
+        "https://id-preview--c1623c94-96be-4791-8153-5174d42cfe46.lovable.app",
+        "https://lovable.app",
+        "http://localhost:3000",
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-from fastapi.responses import Response
-
-@app.options("/{rest_of_path:path}")
-async def preflight_handler(rest_of_path: str):
-    return Response(
-        status_code=200,
-        headers={
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "Authorization, Content-Type, x-client-info, apikey",
-        }
-    )
-
-
 # create DB tables (sqlite file created automatically)
 Base.metadata.create_all(bind=engine)
+
 
 @app.on_event("startup")
 def startup_event():
     # attach models to app.state so routers can access them
     app.state.models = load_models()
 
-# include routers
+
+# ✅ include routers AFTER CORS
 app.include_router(predictions.router, prefix="/predictions", tags=["predictions"])
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
-# app.include_router(teams.router, prefix="/teams", tags=["teams"])  # optional
+
 
 @app.get("/")
 def root():
