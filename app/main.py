@@ -38,12 +38,7 @@ app = FastAPI(title="AI Playcaller API (ML-only)")
 # ✅ CORS (frontend only)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://id-preview--c1623c94-96be-4791-8153-5174d42cfe46.lovable.app",
-        "https://lovable.app",
-        "http://localhost:3000",
-        "http://localhost:5173",
-    ],
+    allow_origins=["https://*.lovableproject.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
