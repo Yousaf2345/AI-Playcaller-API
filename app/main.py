@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import joblib
 
 from .database import Base, engine
-from .routers import predictions, auth
+from .routers import predictions
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -33,9 +33,9 @@ def load_models():
     return models
 
 
-app = FastAPI(title="AI Playcaller API (v2)")
+app = FastAPI(title="AI Playcaller API (ML-only)")
 
-# ✅ CORS MUST COME BEFORE ROUTERS
+# ✅ CORS (frontend only)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -49,22 +49,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# create DB tables (sqlite file created automatically)
+# create DB tables (if still needed)
 Base.metadata.create_all(bind=engine)
 
 
 @app.on_event("startup")
 def startup_event():
-    # attach models to app.state so routers can access them
     app.state.models = load_models()
 
 
-# ✅ include routers AFTER CORS
+# ✅ ML-only routes
 app.include_router(predictions.router, prefix="/predictions", tags=["predictions"])
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
 
 
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "AI Playcaller API (v2) - running"}
+    return {
+        "status": "ok",
+        "message": "AI Playcaller API (ML-only) running"
+    }
+
 
