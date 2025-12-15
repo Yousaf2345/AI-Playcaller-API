@@ -8,7 +8,7 @@ router = APIRouter()
 
 # Offense endpoint
 @router.post("/offense")
-def predict_offense(data: PlayInput, request: Request):
+def predict_offense(data: PlayInput, request: Request, user=Depends(allow_guest_or_user)):
     offense_model = request.app.state.models.get("offense_model")
     if offense_model is None:
         raise HTTPException(status_code=503, detail="Offense model not available")
@@ -40,7 +40,7 @@ def predict_offense(data: PlayInput, request: Request):
 
 # Defensive combined endpoint (returns all three predictions)
 @router.post("/defense")
-def predict_defense(payload: DefenseRequest, request: Request):
+def predict_defense(payload: DefenseRequest, request: Request,user=Depends(allow_guest_or_user)):
     models = request.app.state.models
     m_pressure = models.get("def_pressure_model")
     m_coverage = models.get("def_coverage_model")
@@ -79,7 +79,7 @@ def predict_defense(payload: DefenseRequest, request: Request):
 
 # Optional: individual defense endpoints
 @router.post("/defense/pressure")
-def predict_pressure(payload: DefenseRequest, request: Request):
+def predict_pressure(payload: DefenseRequest, request: Request, user=Depends(allow_guest_or_user)):
     m = request.app.state.models.get("def_pressure_model")
     if m is None:
         raise HTTPException(status_code=503, detail="Pressure model not available")
@@ -89,7 +89,7 @@ def predict_pressure(payload: DefenseRequest, request: Request):
     return {"recommended_pressure": p, "probabilities": probs}
 
 @router.post("/defense/coverage")
-def predict_coverage(payload: DefenseRequest, request: Request):
+def predict_coverage(payload: DefenseRequest, request: Request, user=Depends(allow_guest_or_user)):
     m = request.app.state.models.get("def_coverage_model")
     if m is None:
         raise HTTPException(status_code=503, detail="Coverage model not available")
@@ -99,7 +99,7 @@ def predict_coverage(payload: DefenseRequest, request: Request):
     return {"recommended_coverage": p, "probabilities": probs}
 
 @router.post("/defense/front")
-def predict_front(payload: DefenseRequest, request: Request):
+def predict_front(payload: DefenseRequest, request: Request, user=Depends(allow_guest_or_user)):
     m = request.app.state.models.get("def_front_model")
     if m is None:
         raise HTTPException(status_code=503, detail="Front model not available")
