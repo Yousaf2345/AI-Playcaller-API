@@ -3,6 +3,8 @@ from fastapi import APIRouter, HTTPException, Depends, Request
 import pandas as pd
 from app.schemas import PlayInput, DefenseRequest
 from typing import Any
+from app.core.guest import allow_guest_or_user
+
 
 router = APIRouter()
 
